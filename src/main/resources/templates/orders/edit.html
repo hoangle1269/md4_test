@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Order</title>
+    <th:block th:replace="~{/common/template :: linkBootstrap}"></th:block>
+</head>
+<body>
+<nav th:replace="~{/common/template :: navbar}"></nav>
+<div class="container mt-4">
+    <h3>Edit Order</h3>
+    <form th:action="@{/orders/{id}/update(id=${order.orderId})}" th:object="${order}" method="post">
+        <input type="hidden" th:field="*{orderId}" />
+
+        <div class="mb-3">
+            <label for="productType" class="form-label">Product Type</label>
+            <select id="productType" th:field="*{product.productType.id}" class="form-select">
+                <option th:each="type : ${productTypes}"
+                        th:value="${type.id}"
+                        th:text="${type.name}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="product" class="form-label">Product</label>
+            <select id="product" th:field="*{product.productId}" class="form-select">
+                <option th:each="product : ${products}"
+                        th:value="${product.productId}"
+                        th:text="${product.productName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="purchaseDate" class="form-label">Purchase Date</label>
+            <input type="datetime-local" id="purchaseDate" th:field="*{purchaseDate}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" id="quantity" th:field="*{quantity}" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create Order</title>
+    <th:block th:replace="~{/common/template :: linkBootstrap}"></th:block>
+</head>
+<body>
+<nav th:replace="~{/common/template :: navbar}"></nav>
+<div class="container">
+    <h3>Create New Order</h3>
+    <form th:action="@{/orders/create}" th:object="${order}" method="post">
+        <div class="form-group">
+            <label for="product">Product</label>
+            <select id="product" th:field="*{product}" class="form-control">
+                <option th:each="product : ${products}" th:value="${product}" th:text="${product.productName}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="productType">Product Type</label>
+            <select id="productType" th:field="*{product.productType}" class="form-control">
+                <option th:each="productType : ${productTypes}" th:value="${productType}" th:text="${productType.name}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="purchaseDate">Purchase Date</label>
+            <input type="date" id="purchaseDate" th:field="*{purchaseDate}" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" th:field="*{quantity}" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+        <a href="#" th:href="@{/orders}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
