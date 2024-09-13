@@ -7,6 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class OrderService implements IOrderService{
     @Autowired
@@ -29,4 +33,11 @@ public class OrderService implements IOrderService{
     public void saveOrder(Order order) {
         orderRepository.save(order);
     }
+
+    @Override
+    public Page<Order> findOrdersByDateRange(LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable) {
+        return orderRepository.findByPurchaseDateBetween(startDateTime, endDateTime, pageable);
+    }
+
+
 }

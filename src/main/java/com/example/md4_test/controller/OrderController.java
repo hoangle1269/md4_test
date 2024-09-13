@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -107,5 +111,25 @@ public class OrderController {
         orderService.saveOrder(order);
         return "redirect:/orders";
     }
+
+    // search by date
+    @GetMapping("/search")
+    public String searchOrders(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @PageableDefault(value = 5) Pageable pageable,
+            Model model) {
+
+        // Convert LocalDate to LocalDateTime for start and end dates
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        // Use the service method to find orders by date range
+        Page<Order> orders = orderService.findOrdersByDateRange(startDateTime, endDateTime, pageable);
+        model.addAttribute("orders", orders);
+        return "orders/list";
+    }
+
+
 
 }
