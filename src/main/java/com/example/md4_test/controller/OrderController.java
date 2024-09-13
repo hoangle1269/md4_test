@@ -6,6 +6,7 @@ import com.example.md4_test.model.ProductType;
 import com.example.md4_test.service.IOrderService;
 import com.example.md4_test.service.IProductService;
 import com.example.md4_test.service.IProductTypeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -82,8 +84,29 @@ public class OrderController {
 //        return "redirect:/orders";
 //    }
 
+//    @PostMapping("/{id}/update")
+//    public String updateOrder(@PathVariable("id") Long id, @ModelAttribute Order order) {
+//        Order existingOrder = orderService.findById(id);
+//        if (existingOrder != null) {
+//            existingOrder.setPurchaseDate(order.getPurchaseDate());
+//            existingOrder.setQuantity(order.getQuantity());
+//            existingOrder.setProduct(order.getProduct());
+//            orderService.updateOrder(existingOrder);
+//        }
+//        return "redirect:/orders";
+//    }
+
     @PostMapping("/{id}/update")
-    public String updateOrder(@PathVariable("id") Long id, @ModelAttribute Order order) {
+    public String updateOrder(@PathVariable("id") Long id, @ModelAttribute @Valid Order order, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            // Fetch required data for the form
+            List<Product> products = productService.findAll();
+            List<ProductType> productTypes = productTypeService.findAll();
+            model.addAttribute("products", products);
+            model.addAttribute("productTypes", productTypes);
+            return "orders/edit";
+        }
+
         Order existingOrder = orderService.findById(id);
         if (existingOrder != null) {
             existingOrder.setPurchaseDate(order.getPurchaseDate());
@@ -93,6 +116,7 @@ public class OrderController {
         }
         return "redirect:/orders";
     }
+
 
 
     @GetMapping("/create")
